@@ -43,4 +43,3 @@ logging:
     max-size: 10MB  # 최대 사이즈
   level:
     root: INFO
-    # org.hibernate.SQL: DEBUG
