@@ -24,13 +24,23 @@ spring:
     auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30?
   jpa:
     hibernate:
-      # ddl-auto: update # 기존 더미 데이터 삭제되지 않게
-      ddl-auto: create # 매번 db 초기화하고 시작
+      ddl-auto: update # 기존 더미 데이터 삭제되지 않게
+      # ddl-auto: create # 매번 db 초기화하고 시작
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
-  logging:
-    level:
-      org.hibernate.SQL: DEBUG
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  file:
+    name: /home/ubuntu/signup/server.log  # 로그 파일 절대경로
+    # name: /Users/mintuchel/desktop/signup/server.log
+    max-history: 2 # 삭제 주기 2일
+    max-size: 10MB  # 최대 사이즈
+  level:
+    root: INFO
+    # org.hibernate.SQL: DEBUG
