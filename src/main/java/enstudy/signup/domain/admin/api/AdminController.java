@@ -5,12 +5,14 @@ import enstudy.signup.domain.admin.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin")
@@ -23,6 +25,9 @@ public class AdminController {
     @GetMapping("/users")
     @Operation(summary = "모든 유저 조회")
     public ResponseEntity<List<UserInfoResponse>> getAllUsers() {
+
+        log.info("GET /admin/users");
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(adminService.getAllUsers());
@@ -31,6 +36,9 @@ public class AdminController {
     @DeleteMapping("/users/{email}")
     @Operation(summary = "유저 삭제")
     public ResponseEntity<Void> deleteUser(@PathVariable String email) {
+
+        log.info("GET /admin/users: {}", email);
+
         adminService.deleteUserByEmail(email);
 
         return ResponseEntity
@@ -41,6 +49,9 @@ public class AdminController {
     @DeleteMapping("/email-verification/{email}")
     @Operation(summary = "이메일 인증 기록 삭제")
     public ResponseEntity<Void> deleteEmail(@PathVariable String email) {
+
+        log.info("DELETE /admin/email-verification: {}", email);
+
         adminService.deleteEmail(email);
 
         return ResponseEntity

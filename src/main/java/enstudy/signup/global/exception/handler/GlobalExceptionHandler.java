@@ -2,6 +2,7 @@ package enstudy.signup.global.exception.handler;
 
 import enstudy.signup.global.exception.exception.EmailException;
 import enstudy.signup.global.exception.exception.UserException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,10 +12,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = UserException.class)
     protected ResponseEntity<String> handleUserException(UserException e) {
+        log.error("[!! UserException !!] {}",e.getUserErrorCode().getMessage());
+
         return ResponseEntity
                 .status(e.getUserErrorCode().getHttpStatus())
                 .body(e.getUserErrorCode().getMessage());
@@ -22,6 +26,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = EmailException.class)
     protected ResponseEntity<String> handleEmailException(EmailException e) {
+        log.error("[!! EmailException !!] {}",e.getEmailErrorCode().getMessage());
+
         return ResponseEntity
                 .status(e.getEmailErrorCode().getHttpStatus())
                 .body(e.getEmailErrorCode().getMessage());

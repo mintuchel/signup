@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 @Tag(name = "회원가입/로그인 API", description = "박대원 김시원 신혜연 화이팅")
+@Slf4j
 public class AuthController {
 
     private final AuthService authService;
@@ -34,6 +36,9 @@ public class AuthController {
     @GetMapping("/me")
     @Operation(summary = "특정 유저 정보 조회")
     public ResponseEntity<UserInfoResponse> getUserInfo(@RequestParam String email) {
+
+        log.info("GET /auth/me: {}", email);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userService.getUserByEmail(email));
@@ -42,6 +47,9 @@ public class AuthController {
     @PostMapping("/signup")
     @Operation(summary = "회원가입")
     public ResponseEntity<Integer> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+
+        log.info("POST /auth/signup: {}", signUpRequest.email());
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(authService.signUp(signUpRequest));
@@ -50,6 +58,9 @@ public class AuthController {
     @PostMapping("/email-check")
     @Operation(summary = "이메일 중복 확인")
     public ResponseEntity<String> checkIfEmailAvailable(@Valid @RequestBody CheckEmailRequest checkEmailRequest) {
+
+        log.info("POST /email-check: {}", checkEmailRequest.email());
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(authService.checkIfEmailAvailable(checkEmailRequest));
@@ -58,6 +69,9 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "로그인")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest) {
+
+        log.info("POST /auth/login: {}", loginRequest.email());
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(authService.login(loginRequest).getUsername());
@@ -69,6 +83,9 @@ public class AuthController {
     @PatchMapping("/password")
     @Operation(summary = "비밀번호 변경")
     public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+
+        log.info("POST /auth/password: {}", changePasswordRequest.email());
+
         authService.changePassword(changePasswordRequest);
 
         // 204 반환

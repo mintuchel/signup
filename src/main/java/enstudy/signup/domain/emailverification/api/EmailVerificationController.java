@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/email-verification")
 @Tag(name = "이메일 인증 API", description = "이메일 인증 관련")
+@Slf4j
 public class EmailVerificationController {
     private final EmailVerificationService emailVerificationService;
 
     @PostMapping("/request")
     @Operation(summary = "이메일 인증 번호 전송")
     public ResponseEntity<String> sendVerificationCode(@Valid @RequestBody VerificationCodeRequest verificationCodeRequest) {
+
+        log.info("POST /email-verification/request: {}", verificationCodeRequest.email());
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(emailVerificationService.sendVerificationCode(verificationCodeRequest));
@@ -35,6 +40,9 @@ public class EmailVerificationController {
     @PostMapping("/confirm")
     @Operation(summary = "이메일 인증")
     public ResponseEntity<String> verifyCode(@Valid @RequestBody EmailVerificationRequest emailVerificationRequest) {
+
+        log.info("POST /email-verification/confirm: {} / {}", emailVerificationRequest.email(), emailVerificationRequest.verificationCode());
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(emailVerificationService.verify(emailVerificationRequest));
