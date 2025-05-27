@@ -62,7 +62,7 @@ public class EmailVerificationService {
         return String.format("%06d", secureRandom.nextInt(1000000));
     }
 
-    private void sendVerificationCodeMail(VerificationCodeRequest verificationCodeRequest, String createdCode){
+    public void sendVerificationCodeMail(VerificationCodeRequest verificationCodeRequest, String createdCode){
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
