@@ -37,9 +37,10 @@ spring:
 
 logging:
   file:
-    name: /home/ubuntu/signup/server.log  # 로그 파일 절대경로
-    # name: /Users/mintuchel/desktop/signup/server.log
-    max-history: 2 # 삭제 주기 2일
-    max-size: 10MB  # 최대 사이즈
+    # name: /home/ubuntu/signup/server.log  # 로그 파일 절대경로
+    name: /Users/mintuchel/desktop/signup/server.log
   level:
     root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss}   [%-5level]  -  %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss}   [%-5level]  -  %msg%n"
