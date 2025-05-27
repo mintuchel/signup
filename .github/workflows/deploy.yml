@@ -37,4 +37,4 @@ jobs:
             ./gradlew clean build
             
             sudo fuser -k -n tcp 8080 || true
-            nohup java -Xms80m -Xmx100m -jar build/libs/*SNAPSHOT.jar > ./signup.log 2>&1 &
+            nohup java -Xms80m -Xmx120m -jar build/libs/*SNAPSHOT.jar > ./signup.log 2>&1 &
