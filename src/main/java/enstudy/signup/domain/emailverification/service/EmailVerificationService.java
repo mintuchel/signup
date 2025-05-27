@@ -62,7 +62,7 @@ public class EmailVerificationService {
         return String.format("%06d", secureRandom.nextInt(1000000));
     }
 
-    public void sendVerificationCodeMail(VerificationCodeRequest verificationCodeRequest, String createdCode){
+    private void sendVerificationCodeMail(VerificationCodeRequest verificationCodeRequest, String createdCode){
         try {
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -70,7 +70,7 @@ public class EmailVerificationService {
             helper.setSubject(EmailTemplate.VERIFICATION_MAIL_TITLE);
             helper.setText(String.format(EmailTemplate.VERIFICATION_MAIL_CONTENT, createdCode), true);
             emailSender.send(message);
-            log.info("[ SMTP EMAIL SENDER SUCCESS ]   email = {}", verificationCodeRequest.email());
+            log.info("[ SMTP EMAIL SENT SUCCESS ]                     email = {}", verificationCodeRequest.email());
         } catch (RuntimeException | MessagingException e) {
             // 메시지 전송 시 에러 터지면 서버 에러임
             throw new EmailException(EmailErrorCode.MESSAGING_ERROR);
