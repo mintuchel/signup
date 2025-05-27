@@ -24,7 +24,7 @@ public class AuthService {
     @Transactional
     public int signUp(SignUpRequest signUpRequest){
 
-        log.info("[회원가입 요청] email={}, name={}", signUpRequest.email(), signUpRequest.username());
+        log.info("[ SIGN UP - TRANSACTION START ] email={} name={}", signUpRequest.email(), signUpRequest.username());
 
         // 이미 해당 이메일 유저가 존재한다면 예외 던지기
         if(userRepository.existsByEmail(signUpRequest.email())){
@@ -41,8 +41,7 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
-
-        log.info("[회원가입 성공] email={}, name={}", signUpRequest.email(), signUpRequest.username());
+        log.info("[ SIGN UP - TRANSACTION COMMITED ] email={} name={}", signUpRequest.email(), signUpRequest.username());
 
         return user.getId();
     }
@@ -50,14 +49,14 @@ public class AuthService {
     @Transactional(readOnly = true)
     public String checkIfEmailAvailable(CheckEmailRequest checkEmailRequest){
 
-        log.info("[이메일 중복확인 요청] email={}", checkEmailRequest.email());
+        log.info("[ CHECK EMAIL - TRANSACTION START ] email={}", checkEmailRequest.email());
 
         // 만약 이메일이 중복되었으면 예외 던지기
         if(userRepository.existsByEmail(checkEmailRequest.email())) {
             throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
         }
 
-        log.info("[이메일 중복확인 성공] email={}", checkEmailRequest.email());
+        log.info("[ CHECK EMAIL - TRANSACTION COMMITED ] email={}", checkEmailRequest.email());
 
         return "사용 가능한 이메일입니다";
     }
@@ -65,7 +64,7 @@ public class AuthService {
     @Transactional(readOnly = true)
     public User login(LoginRequest loginRequest) {
 
-        log.info("[로그인 요청] email={}", loginRequest.email());
+        log.info("[ LOGIN - TRANSACTION START ] email={} name={}", loginRequest.email(), loginRequest.password());
 
         User user = userRepository.findByEmail(loginRequest.email())
                 // 해당 이메일 유저가 존재하지 않는다면
@@ -76,7 +75,7 @@ public class AuthService {
         if(!passwordEncoder.matches(loginRequest.password(), user.getPassword()))
             throw new UserException(UserErrorCode.INVALID_PASSWORD);
 
-        log.info("[로그인 성공] email={}, name={}", loginRequest.email(), user.getUsername());
+        log.info("[ LOGIN - TRANSACTION COMMITED ] email={} name={}", loginRequest.email(), loginRequest.password());
 
         // 로그인 성공하면 닉네임 반환
         return user;
@@ -85,10 +84,14 @@ public class AuthService {
     @Transactional
     public void changePassword(ChangePasswordRequest changePasswordRequest) {
 
-        log.info("[비밀번호 변경 요청] email={}", changePasswordRequest.email());
+        log.info("[ CHANGE PASSWORD - TRANSACTION START ] email={}", changePasswordRequest.email());
 
         // 새로운 password 인코딩해주기
         String newPassword = passwordEncoder.encode(changePasswordRequest.password());
+
+        if(!userRepository.existsByEmail(changePasswordRequest.email())){
+            throw new UserException(UserErrorCode.USER_NOT_FOUND);
+        }
 
         int rows = userRepository.updatePasswordByEmail(changePasswordRequest.email(), newPassword);
 
@@ -96,6 +99,6 @@ public class AuthService {
         if(rows == 0)
             throw new UserException(UserErrorCode.PASSWORD_UPDATE_FAILURE);
 
-        log.info("[비밀번호 변경 성공] email={}", changePasswordRequest.email());
+        log.info("[ CHANGE PASSWORD - TRANSACTION COMMITED ] email={}", changePasswordRequest.email());
     }
 }
