@@ -1,0 +1,18 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update # 배포 시에는 기존 데이터 삭제되지 않게
+    properties:
+      hibernate:
+        # 배포 시에는 콘솔에 jpa의 쿼리 안찍히게 -> 로그 파일 너무 커짐
+        dialect: org.hibernate.dialect.MySQLDialect
+
+logging:
+  file:
+    # 배포 서버 로그 파일 경로
+    name: /home/ubuntu/signup/server.log
+  level:
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss}   [%-5level]  -  %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss}   [%-5level]  -  %msg%n"

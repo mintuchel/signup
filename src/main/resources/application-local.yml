@@ -1,0 +1,21 @@
+spring:
+  jpa:
+    hibernate:
+      # 로컬에서는 매번 새로 시작
+      ddl-auto: create
+    properties:
+      hibernate:
+        # 로컬에서는 jpa 쿼리가 콘솔에 찍히게
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+logging:
+  file:
+    # 로컬 로그 파일 절대 경로
+    name: /Users/mintuchel/desktop/signup/server.log
+  level:
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss}   [%-5level]  -  %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss}   [%-5level]  -  %msg%n"
