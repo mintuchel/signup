@@ -10,7 +10,7 @@ spring:
 logging:
   file:
     # 배포 서버 로그 파일 경로
-    name: /home/ubuntu/signup/server.log
+    name: /home/ubuntu/server.log
   level:
     root: INFO
   pattern:
