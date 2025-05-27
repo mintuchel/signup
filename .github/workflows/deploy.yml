@@ -32,4 +32,4 @@ jobs:
             ./gradlew clean build
             
             sudo fuser -k -n tcp 8080 || true
-            nohup java -Xms80m -Xmx120m -jar build/libs/*SNAPSHOT.jar --spring.profiles.active=prod > ./console.log 2>&1 &
+            nohup java -Duser.timezone=Asia/Seoul -Xms80m -Xmx120m -jar build/libs/*SNAPSHOT.jar --spring.profiles.active=prod > ./console.log 2>&1 &
