@@ -37,7 +37,7 @@ public class AdminController {
     @Operation(summary = "유저 삭제")
     public ResponseEntity<Void> deleteUser(@PathVariable String email) {
 
-        log.info("GET /admin/users: {}", email);
+        log.info("DELETE /admin/users: {}", email);
 
         adminService.deleteUserByEmail(email);
 

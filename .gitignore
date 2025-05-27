@@ -38,3 +38,6 @@ out/
 
 ### 환경변수 ###
 src/main/resources/.env
+
+### 로그 파일 ###
+*.log

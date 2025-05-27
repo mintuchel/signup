@@ -17,7 +17,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = UserException.class)
     protected ResponseEntity<String> handleUserException(UserException e) {
-        log.error("[!! UserException !!] {}",e.getUserErrorCode().getMessage());
+        log.error("[ TRANSACTION FAILED ] {}",e.getUserErrorCode().getMessage());
 
         return ResponseEntity
                 .status(e.getUserErrorCode().getHttpStatus())
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = EmailException.class)
     protected ResponseEntity<String> handleEmailException(EmailException e) {
-        log.error("[!! EmailException !!] {}",e.getEmailErrorCode().getMessage());
+        log.error("[ TRANSACTION FAILED ] {}",e.getEmailErrorCode().getMessage());
 
         return ResponseEntity
                 .status(e.getEmailErrorCode().getHttpStatus())

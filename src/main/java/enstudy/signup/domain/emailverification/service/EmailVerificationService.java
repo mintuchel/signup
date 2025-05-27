@@ -32,7 +32,7 @@ public class EmailVerificationService {
     @Transactional
     public String sendVerificationCode(VerificationCodeRequest verificationCodeRequest){
 
-        log.info("[이메일 인증번호 전송 요청] email:{}", verificationCodeRequest.email());
+        log.info("[ SEND VERIFICATION CODE - TRANSACTION START ]      email = {}", verificationCodeRequest.email());
 
         String createdCode = createVerificationCode();
         sendVerificationCodeMail(verificationCodeRequest, createdCode);
@@ -41,10 +41,8 @@ public class EmailVerificationService {
         boolean doesExist = emailVerificationRepository.existsById(verificationCodeRequest.email());
 
         if(doesExist){
-            log.info("인증번호 업데이트: {}", verificationCodeRequest.email());
             emailVerificationRepository.updateCodeById(verificationCodeRequest.email(), createdCode);
         }else {
-            log.info("인증번호 생성: {}", verificationCodeRequest.email());
 
             // 일단 Redis 안쓰고 DB에만 저장
             EmailVerification mail = EmailVerification.builder()
@@ -55,7 +53,7 @@ public class EmailVerificationService {
             emailVerificationRepository.save(mail);
         }
 
-        log.info("[이메일 인증번호 전송 성공] email={}", verificationCodeRequest.email());
+        log.info("[ SEND VERIFICATION CODE - TRANSACTION COMMITED ]   email = {}", verificationCodeRequest.email());
         return "인증 번호가 발송되었습니다";
     }
 
@@ -72,7 +70,7 @@ public class EmailVerificationService {
             helper.setSubject(EmailTemplate.VERIFICATION_MAIL_TITLE);
             helper.setText(String.format(EmailTemplate.VERIFICATION_MAIL_CONTENT, createdCode), true);
             emailSender.send(message);
-            log.info("EmailSender 인증번호 전송 성공: {}", verificationCodeRequest.email());
+            log.info("[ SMTP EMAIL SENDER SUCCESS ]   email = {}", verificationCodeRequest.email());
         } catch (RuntimeException | MessagingException e) {
             // 메시지 전송 시 에러 터지면 서버 에러임
             throw new EmailException(EmailErrorCode.MESSAGING_ERROR);
@@ -82,7 +80,7 @@ public class EmailVerificationService {
     @Transactional(readOnly = true)
     public String verify(EmailVerificationRequest emailVerificationRequest) {
 
-        log.info("[이메일 인증번호 검증 요청] email={}", emailVerificationRequest.email());
+        log.info("[ VERIFY VERIFICATION CODE - TRANSACTION START ]      email = {}", emailVerificationRequest.email());
 
         // 이메일 인증 테이블에 이메일이 존재하지 않는다면
         // 애초에 인증코드가 전송된 적이 없다는 뜻
@@ -93,7 +91,7 @@ public class EmailVerificationService {
         if(!emailVerification.getVerificationCode().equals(emailVerificationRequest.verificationCode()))
             throw new EmailException(EmailErrorCode.INVALID_CODE);
 
-        log.info("[이메일 인증번호 검증 성공] email={}", emailVerificationRequest.email());
+        log.info("[ VERIFY VERIFICATION CODE - TRANSACTION COMMITED ]   email = {}", emailVerificationRequest.email());
         return "인증 번호가 확인되었습니다.";
     }
 }
